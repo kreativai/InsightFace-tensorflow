@@ -5,8 +5,9 @@ import pickle
 import argparse
 import numpy as np
 import tensorflow as tf
+import glob
 
-from scipy import misc
+import PIL.Image
 
 from model import get_embd
 from eval.utils import calculate_roc, calculate_tar
@@ -27,15 +28,13 @@ def get_args():
 
 def load_image(path, image_size):
     print('reading %s' % path)
-    if os.path.isdir(path):
-        paths = list(os.listdir(path))
-    else:
-        paths = [path]
+    paths = glob.glob(path)
     images = []
     images_f = []
     for path in paths:
-        img = misc.imread(path)
-        img = misc.imresize(img, [image_size, image_size])
+        print(path)
+        img = PIL.Image.open(path).resize((image_size, image_size,), PIL.Image.LANCZOS)
+        img = np.array(img)
         # img = img[s:s+image_size, s:s+image_size, :]
         img_f = np.fliplr(img)
         img = img/127.5-1.0
@@ -99,7 +98,7 @@ if __name__ == '__main__':
         with tf.Session(config=tf_config) as sess:
             tf.global_variables_initializer().run()
             print('loading...')
-            saver = tf.train.Saver(var_list=tf.trainable_variables())
+            saver = tf.train.Saver() #var_list=tf.trainable_variables())
             saver.restore(sess, args.model_path)
             print('done!')
 
@@ -112,7 +111,7 @@ if __name__ == '__main__':
             embds_arr = embds_arr/np.linalg.norm(embds_arr, axis=1, keepdims=True)
             print('done!')
             print('saving...')
-            embds_dict = dict(*zip(fns, list(embds_arr)))
+            embds_dict = dict(zip(fns, list(embds_arr)))
             pickle.dump(embds_dict, open(args.save_path, 'wb'))
             print('done!')
 
