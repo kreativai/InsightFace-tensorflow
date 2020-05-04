@@ -1,7 +1,7 @@
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
-from backbones import modifiedResNet_v2, ResNet_v2
+from .backbones import modifiedResNet_v2, ResNet_v2
 
 
 def get_embd(inputs, is_training_dropout, is_training_bn, config, reuse=False, scope='embd_extractor'):
