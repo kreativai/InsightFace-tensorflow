@@ -5,7 +5,7 @@ from __future__ import print_function
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
-from backbones import utils
+from . import utils
 
 resnet_arg_scope = utils.resnet_arg_scope
 
