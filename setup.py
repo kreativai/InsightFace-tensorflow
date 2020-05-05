@@ -12,4 +12,8 @@ setup(name='InsightFace-tensorflow',
         'insightface',
         'insightface.backbones'
       ],
+      package_data={
+          "insightface": ["configs/*.yaml"],
+      },
+      include_package_data=True,
       zip_safe=False)
